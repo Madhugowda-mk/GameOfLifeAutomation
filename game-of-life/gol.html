@@ -1,0 +1,97 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="css/reset.css">
+  <link rel="stylesheet" type="text/css" href="css/gol.css">
+  <title>Game of Life</title>
+
+</head>
+
+<body>
+		<div class="heading">
+			<div class="container">
+				<div class="site-name">
+					<h1>Game of Life</h1>
+				</div>
+			</div>
+		</div>
+
+		<div class="container">
+			<div class="section">
+				<div class="panel">
+					<h1>Matrix size</h1> <input type="range"  id="matrix-size" min="4" max="20" value="6" step="1" />
+				</div>
+				<div id="gol" >
+
+				</div>					
+        <div>
+          <button id="go-button"> Go </button>
+          <button id="stop-button"> Stop </button>
+          <button id="step-button"> Step </button>
+        </div>
+        <div class="panel-bulletpoints">          
+          <ul>
+            <li>Toggle between live/dead by clicking the cell.</li>
+            <li>Go - Starts an evolution.</li>
+            <li>Stop - Stops evolution.</li>
+            <li>Step - Evolves one step at a time.</li>
+            <li><a href="http://en.wikipedia.org/wiki/Conway's_Game_of_Life" >Game of Life rules</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+  
+
+	<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+  	<script src="script/gol.js"></script>
+  	<script type="text/javascript">
+      $("#stop-button").css({
+        'display': 'none'
+      });
+
+  		var gol = new GameOfLife('gol', 6, 6);
+
+  		$("#matrix-size").change(function () {
+  			var matrixSize = $("#matrix-size").val();
+  			gol = new GameOfLife('gol', matrixSize, matrixSize);
+  		})
+
+  		var intervalId;
+
+      $("#step-button").click(function() {
+        gol.go();
+      });
+
+  		$("#go-button").click(function() {
+        if(!intervalId) {
+    			intervalId = setInterval(function () {
+    				gol.go();
+    			}, 1000);
+
+          $("#stop-button").css({
+            'display': 'inline'
+          });
+          $("#step-button").css({
+            'display': 'none'
+          });
+  		  }
+      });
+
+  		$("#stop-button").click(function() {
+  			if(intervalId) {
+  				clearInterval(intervalId);
+  				intervalId = null;
+          $("#step-button").css({
+            'display': 'inline'
+          });
+          $("#stop-button").css({
+            'display': 'none'
+          });
+  			}
+  		})
+  	</script>
+</body>
+</html>

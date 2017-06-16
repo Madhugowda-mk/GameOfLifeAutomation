@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<project name="GOL" default="test" basedir=".">	
+	
+  <!-- Sets variables which can later be used. -->
+  <!-- The value of a property is accessed via ${} -->
+  <property name="src.dir" location="src" />
+  <property name="test.dir" location="src/test/src" />
+  <property name="build.dir" location="bin" />
+  <property name="dist.dir" location="destination" />
+  <property name="lib.dir" location="lib" />
+	
+  <!-- Create a classpath container which can be later used in the ant task -->
+  <path id="build.classpath">
+  	<pathelement location="${test.dir}" />
+  	<pathelement location="${build.dir}" />
+    <fileset dir="${lib.dir}">
+      <include name="**/*.jar" />
+    </fileset>
+  </path>
+    
+  <!-- Deletes the existing build, docs and dist directory-->
+  <target name="clean">
+    <delete dir="${build.dir}" />
+    <delete dir="${dist.dir}" />
+  </target>
+	
+  <!-- Creates the  build, docs and dist directory-->
+  <target name="makedir">
+    <mkdir dir="${build.dir}" />
+    <mkdir dir="${dist.dir}" />
+  </target>
+	
+  <!-- Compiles the java code (including the usage of library for JUnit -->
+  <target name="compile" depends="clean, makedir">
+    <javac srcdir="${src.dir}" destdir="${build.dir}" classpathref="build.classpath"/>
+  </target>
+	
+  <!-- Runs the file and generates Reportng report for TestNG-->
+  <taskdef name="testng" classname="org.testng.TestNGAntTask" classpathref="build.classpath" />
+	
+  <target name="test" depends="compile">
+  	<testng outputdir="${dist.dir}" classpathref="build.classpath"> 
+ 		<xmlfileset dir="${basedir}" includes="testng.xml"/> 
+  	</testng>
+   </target>
+</project>
